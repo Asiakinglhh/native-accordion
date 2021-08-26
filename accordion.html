@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="./Untitled.css">
+        <script src="../js/jquery.min.js" ></script>
+    </head>
+    <body style="background-color: #f5f5f5; margin: 0; padding: 0;">
+        <div class="am-accordion">
+            <div class="am-accordion-item">
+                <div class="am-accordion-header" role="button" tabindex="0" aria-expanded="false"><i class="arrow"></i>查询待审批单据</div>
+                <div class="am-accordion-content am-accordion-content-inactive" style="">
+                    <div class="am-accordion-content-box">
+                        <div class="am-list my-list">
+                            <div class="am-list-body">
+                                <div class="am-list-item am-input-item am-list-item-middle am-input-focus am-input-android">
+                                    <div class="am-list-line">
+                                        <div class="am-input-label am-input-label-5">模糊条件：</div>
+                                        <div class="am-input-control">
+                                            <input placeholder="制单人/金额/等等" type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="am-list-item am-list-item-middle" onclick="showPicker()">
+                                    <div class="am-list-line">
+                                        <div class="am-list-content">开始日期：</div>
+                                        <div class="am-list-extra">2020-10-01</div>
+                                        <div class="am-list-arrow am-list-arrow-horizontal" aria-hidden="true"></div>
+                                    </div>
+                                    <div class="am-list-ripple" style="display: none;"></div>
+                                </div>
+                                <div class="am-list-item am-list-item-middle" onclick="showPicker()">
+                                    <div class="am-list-line">
+                                        <div class="am-list-content">结束日期：</div>
+                                        <div class="am-list-extra">2020-10-31</div>
+                                        <div class="am-list-arrow am-list-arrow-horizontal" aria-hidden="true"></div>
+                                    </div>
+                                    <div class="am-list-ripple" style="display: none;"></div>
+                                </div>
+                                <div class="am-list-item button am-list-item-middle">
+                                    <div class="am-list-line">
+                                        <div class="am-list-content">
+                                            <a role="button" class="am-button am-button-ghost am-button-small am-button-inline" aria-disabled="false">
+                                                <span>重 置</span>
+                                            </a>
+                                            <a role="button" class="am-button am-button-primary am-button-small am-button-inline" aria-disabled="false" href="#" onclick="h_search()">
+                                                <span>确 定</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="am-list-ripple" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+			var header = document.getElementsByClassName("am-accordion-header");
+			header[0].onclick = function(e) {
+				var expanded = e.target.ariaExpanded === "false" ? false : true;
+				this.setAttribute("aria-expanded", !expanded);
+				this.parentElement.classList.toggle("am-accordion-item-active");
+				var panel = this.nextElementSibling;
+				// if (panel.classList.contains("am-accordion-content-inactive")) {
+				if (!expanded) {
+					panel.classList.remove("am-accordion-content-inactive");
+					panel.style.height = "0px";
+					panel.classList.add("am-accordion-content-active", "am-accordion-anim", "am-accordion-anim-active");
+					setTimeout(() => {
+						panel.style.height = panel.scrollHeight + "px";
+					}, 20);
+					h_search();
+				} else {
+					panel.style.height = panel.scrollHeight + "px";
+					panel.classList.add("am-accordion-anim", "am-accordion-anim-active");
+					setTimeout(() => {
+						panel.style.height = "0px";
+					}, 20);
+				}
+			};
+			var content = header[0].nextElementSibling;
+			content.addEventListener("transitionend", function() {
+				if (this.style.height != "0px") {
+					this.classList.remove("am-accordion-anim", "am-accordion-anim-active");
+					this.style.height = null;
+				} else {
+					this.classList.remove("am-accordion-content-active", "am-accordion-anim", "am-accordion-anim-active");
+					this.classList.add("am-accordion-content-inactive");
+					this.style.height = null;
+				}
+			});
+            $(function() {
+				// $('.am-accordion-header').click(function(e) {
+				// 	// var expanded = JSON.parse(e.target.ariaExpanded);/*360浏览器不支持*/
+				// 	var expanded = e.target.ariaExpanded === "false" ? false : true;
+				// 	$(this).attr('aria-expanded', !expanded);
+				// 	$(this).parent().toggleClass('am-accordion-item-active');
+				// 	var next = $(this).next();
+				// 	if (next.hasClass('am-accordion-content-inactive')) {
+				// 		next.removeClass('am-accordion-content-inactive').addClass('am-accordion-content-active');
+				// 		h_search();
+				// 	} else {
+				// 		next.removeClass('am-accordion-content-active').addClass('am-accordion-content-inactive');
+				// 	}
+				// 	next.slideToggle("fast");
+				// });
+                $('.am-list-item:not(:last-child)').on({
+                    mousedown: function() {
+                        $(this).addClass('am-list-item-active')
+                    },
+                    mouseup: function() {
+                        $(this).removeClass('am-list-item-active')
+                    },
+                    touchstart: function() {
+                        $(this).addClass('am-list-item-active')
+                    },
+                    touchmove: function() {
+                        $(this).removeClass('am-list-item-active')
+                    },
+                });
+            });
+            function showPicker() {
+                var picker = '<div id="am-picker-popup-container-1602472870080">'+
+                                '<div>'+
+                                    '<div class="am-picker-popup-mask"></div>'+
+                                    '<div class="am-picker-popup-wrap " role="dialog">'+
+                                        '<div role="document" class="am-picker-popup">'+
+                                            '<div class="am-picker-popup-content">'+
+                                                '<div class="am-picker-popup-body">'+
+                                                    '<div>'+
+                                                        '<div class="am-picker-popup-header">'+
+                                                            '<div class="am-picker-popup-item am-picker-popup-header-left">取消</div>'+
+                                                            '<div class="am-picker-popup-item am-picker-popup-title">接收日期</div>'+
+                                                            '<div class="am-picker-popup-item am-picker-popup-header-right">确定</div>'+
+                                                        '</div>'+
+                                                        '<div class="am-picker" style="flex-direction: row; align-items: center;">'+
+                                                            '<div class="am-picker-col" style="flex: 1 1 0%;">'+
+                                                                '<div class="am-picker-col-mask" style="background-size: 100% 102px;"></div>'+
+                                                                '<div class="am-picker-col-indicator " style="top: 102px;"></div>'+
+                                                                '<div class="am-picker-col-content" style="padding: 102px 0px; transform: translate3d(0px, -680px, 0px);">'+
+                                                                    '<div class="am-picker-col-item ">2000年</div>'+
+                                                                    '<div class="am-picker-col-item ">2001年</div>'+
+                                                                    '<div class="am-picker-col-item ">2002年</div>'+
+                                                                    '<div class="am-picker-col-item ">2003年</div>'+
+                                                                    '<div class="am-picker-col-item ">2004年</div>'+
+                                                                    '<div class="am-picker-col-item ">2005年</div>'+
+                                                                    '<div class="am-picker-col-item ">2006年</div>'+
+                                                                    '<div class="am-picker-col-item ">2007年</div>'+
+                                                                    '<div class="am-picker-col-item ">2008年</div>'+
+                                                                    '<div class="am-picker-col-item ">2009年</div>'+
+                                                                    '<div class="am-picker-col-item ">2010年</div>'+
+                                                                    '<div class="am-picker-col-item ">2011年</div>'+
+                                                                    '<div class="am-picker-col-item ">2012年</div>'+
+                                                                    '<div class="am-picker-col-item ">2013年</div>'+
+                                                                    '<div class="am-picker-col-item ">2014年</div>'+
+                                                                    '<div class="am-picker-col-item ">2015年</div>'+
+                                                                    '<div class="am-picker-col-item ">2016年</div>'+
+                                                                    '<div class="am-picker-col-item ">2017年</div>'+
+                                                                    '<div class="am-picker-col-item ">2018年</div>'+
+                                                                    '<div class="am-picker-col-item ">2019年</div>'+
+                                                                    '<div class="am-picker-col-item am-picker-col-item-selected ">2020年</div>'+
+                                                                    '<div class="am-picker-col-item ">2021年</div>'+
+                                                                    '<div class="am-picker-col-item ">2022年</div>'+
+                                                                    '<div class="am-picker-col-item ">2023年</div>'+
+                                                                    '<div class="am-picker-col-item ">2024年</div>'+
+                                                                    '<div class="am-picker-col-item ">2025年</div>'+
+                                                                    '<div class="am-picker-col-item ">2026年</div>'+
+                                                                    '<div class="am-picker-col-item ">2027年</div>'+
+                                                                    '<div class="am-picker-col-item ">2028年</div>'+
+                                                                    '<div class="am-picker-col-item ">2029年</div>'+
+                                                                    '<div class="am-picker-col-item ">2030年</div>'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                            '<div class="am-picker-col" style="flex: 1 1 0%;">'+
+                                                                '<div class="am-picker-col-mask" style="background-size: 100% 102px;"></div>'+
+                                                                '<div class="am-picker-col-indicator " style="top: 102px;"></div>'+
+                                                                '<div class="am-picker-col-content" style="padding: 102px 0px; transform: translate3d(0px, -272px, 0px);">'+
+                                                                    '<div class="am-picker-col-item ">1月</div>'+
+                                                                    '<div class="am-picker-col-item ">2月</div>'+
+                                                                    '<div class="am-picker-col-item ">3月</div>'+
+                                                                    '<div class="am-picker-col-item ">4月</div>'+
+                                                                    '<div class="am-picker-col-item ">5月</div>'+
+                                                                    '<div class="am-picker-col-item ">6月</div>'+
+                                                                    '<div class="am-picker-col-item ">7月</div>'+
+                                                                    '<div class="am-picker-col-item ">8月</div>'+
+                                                                    '<div class="am-picker-col-item am-picker-col-item-selected ">9月</div>'+
+                                                                    '<div class="am-picker-col-item ">10月</div>'+
+                                                                    '<div class="am-picker-col-item ">11月</div>'+
+                                                                    '<div class="am-picker-col-item ">12月</div>'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                            '<div class="am-picker-col" style="flex: 1 1 0%;">'+
+                                                                '<div class="am-picker-col-mask" style="background-size: 100% 102px;"></div>'+
+                                                                '<div class="am-picker-col-indicator " style="top: 102px;"></div>'+
+                                                                '<div class="am-picker-col-content" style="padding: 102px 0px; transform: translate3d(0px, 0px, 0px);">'+
+                                                                    '<div class="am-picker-col-item am-picker-col-item-selected ">1日</div>'+
+                                                                    '<div class="am-picker-col-item ">2日</div>'+
+                                                                    '<div class="am-picker-col-item ">3日</div>'+
+                                                                    '<div class="am-picker-col-item ">4日</div>'+
+                                                                    '<div class="am-picker-col-item ">5日</div>'+
+                                                                    '<div class="am-picker-col-item ">6日</div>'+
+                                                                    '<div class="am-picker-col-item ">7日</div>'+
+                                                                    '<div class="am-picker-col-item ">8日</div>'+
+                                                                    '<div class="am-picker-col-item ">9日</div>'+
+                                                                    '<div class="am-picker-col-item ">10日</div>'+
+                                                                    '<div class="am-picker-col-item ">11日</div>'+
+                                                                    '<div class="am-picker-col-item ">12日</div>'+
+                                                                    '<div class="am-picker-col-item ">13日</div>'+
+                                                                    '<div class="am-picker-col-item ">14日</div>'+
+                                                                    '<div class="am-picker-col-item ">15日</div>'+
+                                                                    '<div class="am-picker-col-item ">16日</div>'+
+                                                                    '<div class="am-picker-col-item ">17日</div>'+
+                                                                    '<div class="am-picker-col-item ">18日</div>'+
+                                                                    '<div class="am-picker-col-item ">19日</div>'+
+                                                                    '<div class="am-picker-col-item ">20日</div>'+
+                                                                    '<div class="am-picker-col-item ">21日</div>'+
+                                                                    '<div class="am-picker-col-item ">22日</div>'+
+                                                                    '<div class="am-picker-col-item ">23日</div>'+
+                                                                    '<div class="am-picker-col-item ">24日</div>'+
+                                                                    '<div class="am-picker-col-item ">25日</div>'+
+                                                                    '<div class="am-picker-col-item ">26日</div>'+
+                                                                    '<div class="am-picker-col-item ">27日</div>'+
+                                                                    '<div class="am-picker-col-item ">28日</div>'+
+                                                                    '<div class="am-picker-col-item ">29日</div>'+
+                                                                    '<div class="am-picker-col-item ">30日</div>'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                        '</div>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<script>'+
+                                '$(function(){'+
+                                    '$(".am-picker-popup-header-left").on({'+
+                                        'mousedown: function() {'+
+                                            '$(this).addClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'mouseup: function() {'+
+                                            '$(this).removeClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'click: function() {'+
+                                            '$(".am-picker-popup-mask").addClass("am-picker-popup-mask-hidden");'+
+                                            '$(".am-picker-popup .am-picker-popup-content").addClass("am-picker-popup-close");'+
+                                            '$("#am-picker-popup-container-1602472870080").remove();'+
+                                            '$("body").css("overflow", "");'+
+                                        '},'+
+                                        'touchstart: function(e) {'+
+                                            '$(this).addClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'touchmove: function() {'+
+                                            '$(this).removeClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'touchend: function() {'+
+                                            '$(".am-picker-popup-mask").addClass("am-picker-popup-mask-hidden");'+
+                                            '$(".am-picker-popup .am-picker-popup-content").addClass("am-picker-popup-close");'+
+                                            '$("#am-picker-popup-container-1602472870080").remove();'+
+                                            '$("body").css("overflow", "");'+
+                                        '},'+
+                                    '});'+
+                                    '$(".am-picker-popup-header-right").on({'+
+                                        'mousedown: function() {'+
+                                            '$(this).addClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'mouseup: function() {'+
+                                            '$(this).removeClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'click: function() {'+
+                                            '$(".am-picker-popup-mask").addClass("am-picker-popup-mask-hidden");'+
+                                            '$(".am-picker-popup .am-picker-popup-content").addClass("am-picker-popup-close");'+
+                                            '$("#am-picker-popup-container-1602472870080").remove();'+
+                                            '$("body").css("overflow", "");'+
+                                        '},'+
+                                        'touchstart: function(e) {'+
+                                            '$(this).addClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'touchmove: function() {'+
+                                            '$(this).removeClass("am-picker-popup-item-active");'+
+                                        '},'+
+                                        'touchend: function() {'+
+                                            '$(".am-picker-popup-mask").addClass("am-picker-popup-mask-hidden");'+
+                                            '$(".am-picker-popup .am-picker-popup-content").addClass("am-picker-popup-close");'+
+                                            '$("#am-picker-popup-container-1602472870080").remove();'+
+                                            '$("body").css("overflow", "");'+
+                                        '},'+
+                                    '});'+
+                                    '$(".am-picker-col").on({'+
+                                        // 'touchstart: function(e) {'+
+                                        // 'console.log(e.originalEvent.targetTouches[0].);'+
+                                        // '},'+
+                                        'touchmove: function(e) {'+
+                                        'console.log(e.originalEvent.targetTouches[0].clientY);'+
+
+                                        // '$(".am-picker-col-content").css("transform", "translate3d(0px, , 0px)");'+
+                                        '},'+
+                                        // 'touchend: function() {'+
+                                        // '$("body").remove("#am-picker-popup-container-1602489605723");'+
+                                        // '},'+
+                                    '});'+
+                                '});'+
+                            '<\/script>'
+                $("body").append(picker).css("overflow", "hidden");
+            };
+        </script>
+    </body>
+</html>
